@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("Retro calculator")
 class CalculatorTest {
@@ -111,7 +112,7 @@ class CalculatorTest {
         Calculator calc = new Calculator();
 
         calc.pressDigitKey(-7);
-        calc.pressBinaryOperationKey("-");
+        calc.pressBinaryOperationKey("+");
         calc.pressDigitKey(-1);
         calc.pressEqualsKey();
 
@@ -120,6 +121,20 @@ class CalculatorTest {
 
         assertEquals(expected, actual); 
     } 
-    
+    @Test
+    @DisplayName("should preserve result precision with multiple equals presses")
+    void testMultipleEqualsPresses() {
+        Calculator calc = new Calculator();
+        
+        calc.pressDigitKey(2);
+        calc.pressBinaryOperationKey("/");
+        calc.pressDigitKey(3);
+        calc.pressEqualsKey();
+        calc.pressEqualsKey(); // Pressing equals again
+        
+        String expected = "0.22222222"; // Result gets increasingly smaller
+        String actual = calc.readScreen();
+        
+        assertEquals(expected, actual);
+    }
 }
-
